@@ -58,14 +58,6 @@ class HostelManagementSystem {
             }
             return "Room " + roomNumber + " is either not available or already at full capacity!";
         }
-
-        // Method to release a room when a student checks out
-        void releaseRoom() {
-            currentOccupants--;  // Decrease current occupants
-            if (currentOccupants == 0) {
-                isAvailable = true;  // Make room available again if it has no occupants
-            }
-        }
     }
 
     // ArrayList to store the list of registered students
