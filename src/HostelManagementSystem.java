@@ -175,61 +175,80 @@ class HostelManagementSystem {
     }
     // Method to allocate a room to a student
     public static void allocateRoom() {
-        try {
+    int id = -1;  // Default invalid value
+    try {
+        // Validate Student ID (positive integer)
+        while (id <= 0) {
             System.out.print("Enter Student ID to Allocate Room: ");
-            int id = scanner.nextInt();  // Take student ID for room allocation
-            scanner.nextLine();  // Consume newline
-
-            Student student = findStudent(id);  // Find the student by ID
-            if (student != null) {
-                // If the student already has a room, notify the user
-                if (student.allocatedRoom != null) {
-                    System.out.println("This student already has a room allocated: " + student.allocatedRoom.roomNumber);
-                    return;
-                }
-
-                boolean roomAllocated = false;  // Flag to check if a room is allocated
-                // Loop through all rooms to find an available one
-                for (Room room : rooms) {
-                    if (room.isAvailable && room.currentOccupants < room.capacity) {
-                        String message = room.allocateRoom();  // Allocate the room
-                        student.allocatedRoom = room;  // Assign room to the student
-                        System.out.println("Room allocated to student: " + student.name);
-                        System.out.println(message);
-                        roomAllocated = true;  // Set flag to true if room is allocated
-                        break;
-                    }
-                }
-                if (!roomAllocated) {
-                    System.out.println("No rooms available at the moment.");
+            if (scanner.hasNextInt()) {
+                id = scanner.nextInt();
+                scanner.nextLine();  // Consume newline
+                if (id <= 0) {
+                    System.out.println("Invalid ID! Please enter a valid positive integer.");
                 }
             } else {
-                System.out.println("Student not found.");  // Student not found by ID
+                System.out.println("Invalid input! Please enter a valid integer for the student ID.");
+                scanner.nextLine();  // Clear the invalid input
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input! Please enter a valid student ID.");
-            scanner.nextLine();  // Clear the buffer
         }
-    }
 
-    // Method to view student details
-    public static void viewStudentDetails() {
+        Student student = findStudent(id);
+        if (student != null) {
+            // If the student already has a room, notify
+            if (student.allocatedRoom != null) {
+                System.out.println("This student already has a room allocated: " + student.allocatedRoom.roomNumber);
+                return;
+            }
+
+            boolean roomAllocated = false;
+            for (Room room : rooms) {
+                if (room.isAvailable && room.currentOccupants < room.capacity) {
+                    String message = room.allocateRoom();
+                    student.allocatedRoom = room;  // Assign room to the student
+                    System.out.println("Room allocated to student: " + student.name);
+                    System.out.println(message);
+                    roomAllocated = true;
+                    break;
+                }
+            }
+            if (!roomAllocated) {
+                System.out.println("No rooms available at the moment.");
+            }
+        } else {
+            System.out.println("Student not found.");
+        }
+    } catch (InputMismatchException e) {
+        System.out.println("Invalid input! Please enter a valid student ID.");
+        scanner.nextLine();  // Clear the buffer
+    }
+}
+   // Method to view student details
+public static void viewStudentDetails() {
+    int id = -1;  // Default invalid value
+    while (id <= 0) {  // Loop until a valid ID is entered
         try {
             System.out.print("Enter Student ID to View Details: ");
-            int id = scanner.nextInt();  // Take student ID to view details
+            id = scanner.nextInt();  // Take student ID as input
             scanner.nextLine();  // Consume newline
 
-            Student student = findStudent(id);  // Find the student by ID
-            if (student != null) {
-                student.displayStudentInfo();  // Display the student's information
+            if (id <= 0) {
+                System.out.println("Invalid ID! Please enter a valid positive integer.");
             } else {
-                System.out.println("Student not found.");  // If student is not found
+                Student student = findStudent(id);  // Find the student by ID
+                if (student != null) {
+                    student.displayStudentInfo();  // Display the student's information
+                    break;  // Exit the loop if student is found
+                } else {
+                    System.out.println("Student not found. Please re-enter a valid Student ID.");
+                }
             }
         } catch (InputMismatchException e) {
             System.out.println("Invalid input! Please enter a valid student ID.");
             scanner.nextLine();  // Clear the buffer
         }
     }
+}
+
 
     // Helper method to find a student by their ID
     public static Student findStudent(int id) {
